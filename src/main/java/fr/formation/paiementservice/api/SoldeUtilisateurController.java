@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,6 +22,7 @@ import fr.formation.paiementservice.model.SoldeUtilisateur;
 import fr.formation.paiementservice.repo.SoldeUtilisateurRepository;
 import fr.formation.paiementservice.request.CreateSoldeRequest;
 import fr.formation.paiementservice.response.SoldeResponse;
+
 
 @RestController
 @RequestMapping("/api/solde-utilisateur")
@@ -60,7 +62,17 @@ public class SoldeUtilisateurController {
 		return userResponse;
 	}
 
-
+	@PutMapping("/{userId}")
+	public SoldeUtilisateur modifierSoldeUtilisateur(@PathVariable String userId,@RequestBody SoldeUtilisateur solde) 
+	{
+		SoldeUtilisateur soldebd=this.repository.findById(userId).get();
+	
+		
+		soldebd.setSolde(soldebd.getSolde().add(solde.getSolde()));
+		repository.save(soldebd);
+		
+		return soldebd;
+	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
